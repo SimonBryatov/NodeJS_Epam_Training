@@ -1,19 +1,23 @@
 import dotenv from 'dotenv';
-import express from 'express';
-import mainRouter from './api/mainRouter';
-
 dotenv.config();
 
-const app = express();
+import express from 'express';
+import 'express-async-errors';
+import loaders from './loaders';
+import config from './appConfig';
 
-// BASE MIDDLEWARES
-app.use(express.json());
+import './loaders/sequelize';
 
-// BASE ROUTER
-app.use('/', mainRouter);
+const startServer = async () => {
+    const app = express();
 
-// START APP
-const port = process.env.PORT;
-app.listen(port, () => {
-    console.log(`App started and listening at port:${port}`);
-});
+    await loaders({ expressApp: app, config });
+
+    const port = process.env.PORT;
+
+    app.listen(port, () => {
+        console.log(`App started and listening at port:${port}`);
+    });
+};
+
+startServer();
