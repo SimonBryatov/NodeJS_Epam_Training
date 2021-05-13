@@ -12,6 +12,16 @@ const passwordValidator = Joi.string()
 
 const ageValidator = Joi.number().integer().required().min(4).max(130);
 
+const idValidator = Joi.string().guid({
+    version: ['uuidv4']
+});
+
+export const getUserValidator = celebrate({
+    [Segments.PARAMS]: {
+        id: idValidator
+    }
+});
+
 export const createUserValidator = celebrate({
     [Segments.BODY]: Joi.object({
         login: loginValidator,
@@ -21,10 +31,19 @@ export const createUserValidator = celebrate({
 });
 
 export const updateUserValidator = celebrate({
+    [Segments.PARAMS]: {
+        id: idValidator
+    },
     [Segments.BODY]: Joi.object({
         login: loginValidator,
         age: ageValidator
     })
+});
+
+export const deleteUserValidator = celebrate({
+    [Segments.PARAMS]: {
+        id: idValidator
+    }
 });
 
 export const autoSuggestUserValidator = celebrate({
